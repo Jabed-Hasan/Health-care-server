@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "prettier": "format ."
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
