@@ -5,4 +5,5 @@ const router = express.Router();
 // Define user-related routes here
 router.get('/',UserController.CreateAdmin);
 router.post('/',UserController.CreateAdmin);
+router.get('/all',UserController.getUSerfromDB);
 export const UserRouter = router;

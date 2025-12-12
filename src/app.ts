@@ -1,7 +1,10 @@
-import express, { Application, Request, Response, } from 'express';
+import express, { Application, NextFunction, Request, Response, } from 'express';
 import cors from "cors";
 import { UserRouter } from './app/modules/User/user.routes';
-import { AminRouters } from './app/modules/Admin/admin.routes';
+import { AdminRouters } from './app/modules/Admin/admin.routes';
+import router from './app/modules/routes';
+import { StatusCodes } from 'http-status-codes';
+import globalErrorHandler from './app/middlewares/globalErrorHandler';
 
 
 export const app: Application = express();
@@ -15,6 +18,7 @@ app.get('/', (req:Request, res:Response) => {
   });
 });
 
-app.use('/api/v1/user',UserRouter);
-app.use('/api/v1/admin',AminRouters);
+app.use('/api/v1',router);
+app.use(globalErrorHandler);
+
 export default app;
