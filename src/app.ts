@@ -5,6 +5,8 @@ import { AdminRouters } from './app/modules/Admin/admin.routes';
 import router from './app/modules/routes';
 import { StatusCodes } from 'http-status-codes';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
+import { error } from 'console';
+import path from 'path';
 
 
 export const app: Application = express();
@@ -20,5 +22,15 @@ app.get('/', (req:Request, res:Response) => {
 
 app.use('/api/v1',router);
 app.use(globalErrorHandler);
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(StatusCodes.NOT_FOUND).json({
+    success: false,
+    message: 'Route not found',
+    error: {
+      path: req.originalUrl,
+      message: 'You have reached a route that is not defined on the server',
+    },
+  });
+});
 
 export default app;
