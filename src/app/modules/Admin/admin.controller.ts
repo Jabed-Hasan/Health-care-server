@@ -1,5 +1,5 @@
 
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { AdminService } from "./admin.service";
 import pick from "../../../shared/pick";
 import { adminFilterableFields } from "./admin.constant";
@@ -8,9 +8,21 @@ import { STATUS_CODES } from 'http';
 import { StatusCodes } from 'http-status-codes';
 
 
-const getAllAdminsfromDB =async (req: Request, res: Response, next:NextFunction) => {
 
-    try{
+const catchAsync = (fn:RequestHandler) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        try{
+            await fn(req, res, next);
+        }
+        catch(err){
+            next(err);
+        }
+}
+};
+
+const getAllAdminsfromDB = catchAsync(async (req: Request, res: Response) => {
+
+    
         
         const filter = pick(req.query, adminFilterableFields);
         const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
@@ -23,18 +35,11 @@ const getAllAdminsfromDB =async (req: Request, res: Response, next:NextFunction)
             data: result.data,
         });
 
-
-    }catch(err){
-        next(err)
-           
-    };
-
-
 }
-
+)
         
-    const getByIdFromDB = async(req: Request, res: Response, next: NextFunction) => {
-        try{
+    const getByIdFromDB = catchAsync(async(req: Request, res: Response) => {
+       
             const {id} = req.params;
             const result = await AdminService.getByIdFromDB(id);
             sendResponse(res,{
@@ -44,14 +49,12 @@ const getAllAdminsfromDB =async (req: Request, res: Response, next:NextFunction)
                 data: result,
             });
            
-        }catch(err: any){
-            next(err);
-        }
+        
     }
 
-
-    const updateIntoDB = async(req: Request, res: Response, next: NextFunction) => {
-        try{
+)
+    const updateIntoDB = catchAsync(async(req: Request, res: Response) => {
+       
             const {id} = req.params;
             const result = await AdminService.updateIntoDB(id ,req.body);
             sendResponse(res,{
@@ -61,29 +64,25 @@ const getAllAdminsfromDB =async (req: Request, res: Response, next:NextFunction)
                 data: result,
             });
 
-        }catch(err: any){
-            next(err);
-        }
-    }
+       
+    })
 
-     const DeleteFromDB = async(req: Request, res: Response, next: NextFunction) => {
-        try{
+     const DeleteFromDB = catchAsync(async(req: Request, res: Response) => {
+       
             const {id} = req.params;
             const result = await AdminService.DeleteFromDB(id);
-           sendResponse(res,{
+            sendResponse(res,{
                 statusCode: StatusCodes.OK,
                 success: true,
                 message: "Admin Deleted successfully",
                 data: result,
             });
 
-        }catch(err: any){
-            next(err);
-        }
-    }
+        
+    })
 
-const SoftDeleteFromDB = async(req: Request, res: Response, next: NextFunction) => {
-        try{
+const SoftDeleteFromDB = catchAsync(async(req: Request, res: Response) => {
+       
             const {id} = req.params;
             const result = await AdminService.SoftDeleteFromDB(id);
             sendResponse(res,{
@@ -93,11 +92,9 @@ const SoftDeleteFromDB = async(req: Request, res: Response, next: NextFunction) 
                 data: result,
             });
 
-        }catch(err: any){
-            next(err);
-        }
+        
     }
-    
+    )
 
 
 export const AdminController = {
