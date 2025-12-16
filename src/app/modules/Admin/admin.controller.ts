@@ -6,19 +6,8 @@ import { adminFilterableFields } from "./admin.constant";
 import sendResponse from '../../../shared/sendResponse';
 import { STATUS_CODES } from 'http';
 import { StatusCodes } from 'http-status-codes';
+import catchAsync from '../../../shared/catchAsync';
 
-
-
-const catchAsync = (fn:RequestHandler) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
-        try{
-            await fn(req, res, next);
-        }
-        catch(err){
-            next(err);
-        }
-}
-};
 
 const getAllAdminsfromDB = catchAsync(async (req: Request, res: Response) => {
 

@@ -2,12 +2,14 @@ import { Admin, Prisma, UserStatus } from '../../../generated/prisma/client';
 import { adminSearchableFields } from './admin.constant';
 import { paginationHelper } from '../../../helper/paginationHelper';
 import prisma from '../../../shared/prisma';
+import { IAdminFilterRequest } from './admin.interface';
+import { IPaginationOptions } from '../../interfaces/pagination';
 
 
 
 
 
-const getAllAdminsfromDB = async (params: any, options: any)=> {
+const getAllAdminsfromDB = async (params: IAdminFilterRequest, options: IPaginationOptions)=> {
     const {limit, page, sortBy, sortOrder,skip } = paginationHelper.calculatePagination(options);
     const { searchTerm, ...filterData} = params;
     const andConditions : Prisma.AdminWhereInput[] = [];
@@ -27,7 +29,7 @@ if(Object.keys(filterData).length>0){
     andConditions.push({
         AND: Object.keys(filterData).map((key) => ({
             [key]: {
-                equals: filterData[key],
+                equals: (filterData as any)[key],
             }
         }))
     });

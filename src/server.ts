@@ -1,11 +1,14 @@
 import 'dotenv/config';
 import app from './app';
+import config from './config';
+import { Server } from 'http';
 
-const port = 5001;
+
+
 
 async function main() {
-  app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+  const server :Server =app.listen(config.port, () => {
+    console.log(`Server is running on http://localhost:${config.port}`);
   });
 }
 
